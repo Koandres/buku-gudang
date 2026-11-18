@@ -1,0 +1,40 @@
+/* Satu-satunya sumber warna, font, radius, jarak, dan ukuran huruf. */
+:root {
+    --color-bg: #F4F2EC;
+    --color-surface: #FFFFFF;
+    --color-text: #1D1F1C;
+    --color-muted: #666A62;
+    --color-line: #DAD8CE;
+    --color-accent: #2F6B4F;
+    --color-accent-ink: #FFFFFF;
+    --color-warning: #B7791F;
+    --color-danger: #B3372B;
+    --color-subtle: #EEECE4;
+
+    --font-ui: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
+    --font-number: ui-monospace, 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
+
+    --radius: 3px;
+    --space-1: 4px;
+    --space-2: 8px;
+    --space-3: 12px;
+    --space-4: 16px;
+    --space-5: 24px;
+    --space-6: 32px;
+    --text-base: 14px;
+    --text-small: 12px;
+    --text-large: 20px;
+}
+
+[data-theme='dark'] {
+    --color-bg: #191A18;
+    --color-surface: #222421;
+    --color-text: #E8E6DD;
+    --color-muted: #9C9E94;
+    --color-line: #363832;
+    --color-accent: #5BB27A;
+    --color-accent-ink: #1D1F1C;
+    --color-warning: #D9A441;
+    --color-danger: #E0675B;
+    --color-subtle: #2B2D28;
+}

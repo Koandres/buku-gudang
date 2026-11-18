@@ -1,0 +1,12 @@
+@media print {
+    :root { --color-bg: #FFFFFF; --color-surface: #FFFFFF; --color-text: #000000; --color-line: #999999; }
+    body { background: var(--color-surface); }
+    .sidebar, .topbar, .no-print, .btn, .pagination, .toolbar { display: none !important; }
+    .app-shell, .main, .content { display: block; padding: 0; max-width: none; }
+    .panel { border: none; }
+    .ledger { border-top: 1px solid var(--color-text); }
+    .ledger th, .ledger td { border-bottom: 1px solid var(--color-line) !important; padding: 4px 6px; }
+    .doc-head { border-bottom: 2px solid var(--color-text); }
+    .status { border: 1px solid var(--color-line); }
+    @page { size: A4 portrait; margin: 16mm; }
+}
