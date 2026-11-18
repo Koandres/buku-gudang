@@ -28,6 +28,9 @@ export default function RequestsIndex({ requests, q, status, statuses }) {
                         <Link href={`/purchase-requests/${row.id}`}>Lihat</Link>
                         {draft && own && <Link href={`/purchase-requests/${row.id}/edit`}>Ubah</Link>}
                         {draft && own && <Link href={`/purchase-requests/${row.id}/submit`} method="post" as="button" className="btn">Ajukan</Link>}
+                        {row.status === 'disetujui' && ['pembelian', 'admin'].includes(user?.role) && (
+                            <Link href={`/purchase-orders/create?purchase_request_id=${row.id}`}>Buat PO</Link>
+                        )}
                     </span>
                 );
             },

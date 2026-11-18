@@ -8,6 +8,7 @@ return [
         'PR' => env('ERP_PREFIX_PR', 'PR'),
         'PO' => env('ERP_PREFIX_PO', 'PO'),
         'GR' => env('ERP_PREFIX_GR', 'GR'),
+        'ADJ' => env('ERP_PREFIX_ADJ', 'ADJ'),
     ],
 
     // Pola nomor: PREFIX-YYYYMM-0001 (nomor diambil dari tabel document_sequences).

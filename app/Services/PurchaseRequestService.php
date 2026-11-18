@@ -98,18 +98,39 @@ class PurchaseRequestService
 
     public function tandaiDiproses(PurchaseRequest $request): void
     {
-        if ($request->status === RequestStatus::Diproses || $request->relationLoaded('items') === false) {
+        if (! in_array($request->status, [RequestStatus::Disetujui, RequestStatus::Diproses], true)) {
             return;
         }
 
-        $lengkap = $request->items->every(fn ($item): bool => $item->jumlah_dipesan >= $item->jumlah);
-        if (! $lengkap || $request->status === RequestStatus::Diproses) {
+        $request->load('items');
+        if ($request->items->isEmpty() || ! $request->items->every(fn ($item): bool => $item->jumlah_dipesan >= $item->jumlah)) {
+            return;
+        }
+
+        if ($request->status === RequestStatus::Diproses) {
             return;
         }
 
         DB::transaction(function () use ($request): void {
             $request->update(['status' => RequestStatus::Diproses]);
             $this->logActivity('PR diproses', "PR: {$request->nomor}", 'Semua baris telah masuk PO');
+        });
+    }
+
+    public function tandaiBelumDiproses(PurchaseRequest $request): void
+    {
+        if ($request->status !== RequestStatus::Diproses) {
+            return;
+        }
+
+        $request->load('items');
+        if (! $request->items->contains(fn ($item): bool => $item->jumlah_dipesan < $item->jumlah)) {
+            return;
+        }
+
+        DB::transaction(function () use ($request): void {
+            $request->update(['status' => RequestStatus::Disetujui]);
+            $this->logActivity('PR dibuka kembali', "PR: {$request->nomor}", 'Sebagian PO dibatalkan');
         });
     }
 

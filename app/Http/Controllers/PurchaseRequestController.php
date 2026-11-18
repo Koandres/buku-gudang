@@ -7,6 +7,7 @@ use App\Http\Requests\PurchaseRequestRequest;
 use App\Http\Requests\RejectRequest;
 use App\Models\ActivityLog;
 use App\Models\Item;
+use App\Models\PurchaseOrder;
 use App\Models\PurchaseRequest;
 use App\Services\PurchaseRequestService;
 use Illuminate\Http\RedirectResponse;
@@ -68,7 +69,11 @@ class PurchaseRequestController extends Controller
     public function show(PurchaseRequest $purchaseRequest): Response
     {
         Gate::authorize('view', $purchaseRequest);
-        $purchaseRequest->load(['user:id,name', 'items.item:id,kode,nama,satuan', 'purchaseOrders:id,nomor,status']);
+        $purchaseRequest->load([
+            'user:id,name',
+            'items.item:id,kode,nama,satuan',
+            'purchaseOrders:id,purchase_request_id,nomor,status',
+        ]);
 
         return Inertia::render('PurchaseRequests/Show', [
             'request' => $purchaseRequest,
@@ -79,6 +84,8 @@ class PurchaseRequestController extends Controller
                 'submit' => Gate::allows('submit', $purchaseRequest),
                 'approve' => Gate::allows('approve', $purchaseRequest),
                 'reject' => Gate::allows('approve', $purchaseRequest),
+                'createOrder' => Gate::allows('create', PurchaseOrder::class)
+                    && $purchaseRequest->status === RequestStatus::Disetujui,
             ],
         ]);
     }

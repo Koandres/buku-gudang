@@ -13,3 +13,9 @@ export const orderStatus = {
     selesai: { label: 'Selesai', tone: 'aksen' },
     dibatalkan: { label: 'Dibatalkan', tone: 'netral' },
 };
+
+export const movementType = {
+    masuk: { label: 'Masuk', tone: 'aksen' },
+    keluar: { label: 'Keluar', tone: 'peringatan' },
+    penyesuaian: { label: 'Penyesuaian', tone: 'netral' },
+};

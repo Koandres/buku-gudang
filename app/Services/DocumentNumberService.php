@@ -3,7 +3,7 @@
 namespace App\Services;
 
 use App\Models\DocumentSequence;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Database\QueryException;
 
 class DocumentNumberService
 {
@@ -28,7 +28,7 @@ class DocumentNumberService
                     'period' => $period,
                     'last_number' => 0,
                 ]);
-            } catch (\Illuminate\Database\QueryException) {
+            } catch (QueryException) {
                 // Baris bisa dibuat proses lain di antara first() dan create().
                 $sequence = DocumentSequence::query()
                     ->where(['prefix' => $prefix, 'period' => $period])

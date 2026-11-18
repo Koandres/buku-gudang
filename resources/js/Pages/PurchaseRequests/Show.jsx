@@ -63,6 +63,11 @@ export default function RequestShow({ request, timeline, can }) {
                             <Link className="btn btn-primary" href={`/purchase-requests/${request.id}/submit`} method="post" as="button">Ajukan PR</Link>
                         </div>
                     )}
+                    {can.createOrder && (
+                        <div className="row">
+                            <Link className="btn btn-primary" href={`/purchase-orders/create?purchase_request_id=${request.id}`}>Buat PO dari PR ini</Link>
+                        </div>
+                    )}
                     {can.approve && (
                         <div className="stack">
                             <Link className="btn btn-primary" href={`/purchase-requests/${request.id}/approve`} method="post" as="button">Setujui PR</Link>

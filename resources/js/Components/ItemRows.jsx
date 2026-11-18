@@ -29,6 +29,8 @@ export default function ItemRows({ columns, rows, onChange, errors = {}, readOnl
                                         ) : (
                                             row[column.displayKey ?? column.key]
                                         )
+                                    ) : column.type === 'hidden' ? (
+                                        <input type="hidden" value={row[column.key] ?? ''} readOnly />
                                     ) : column.type === 'select' ? (
                                         <select
                                             className={`select ${errors[`items.${index}.${column.key}`] ? 'invalid' : ''}`}

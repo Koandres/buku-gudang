@@ -1,58 +1,106 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Buku Gudang
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Mini ERP untuk alur **permintaan pembelian → persetujuan → pesanan pembelian → penerimaan barang bertahap → kartu stok**, dilengkapi dashboard, laporan dengan ekspor CSV, dan log aktivitas.
 
-## About Laravel
+Aplikasi ini dibuat sebagai **studi kasus portofolio**. Seluruh nama, alamat, harga, dan transaksi adalah **data fiktif**.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Tumpukan teknologi
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- Laravel 13 dengan SQLite (WAL, `foreign_keys`, `busy_timeout`), Eloquent dan migration agar tetap agnostik database.
+- Inertia.js + React 19 + Vite (starter kit), tanpa paket Composer/npm tambahan di luar starter kit.
+- Pest untuk tes otomatis dan Pint untuk format kode.
+- Tampilan bertema "Buku Besar" melalui `resources/css/tokens.css`, font lokal, CSS cetak terpisah, dan tanpa CDN.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Fitur utama
 
-## Learning Laravel
+- **Master data:** supplier, barang, gudang, dan pengguna dengan hak akses per peran.
+- **Permintaan pembelian (PR):** buat draft, ajukan, setujui/tolak (persetujuan diri sendiri dilarang), dan tandai sedang diproses.
+- **Pesanan pembelian (PO):** dibuat dari PR secara sebagian maupun penuh, terbitkan, batalkan dengan pengembalian sisa PR, serta cetak PO.
+- **Penerimaan barang (GR):** terima sebagian atau seluruh isi PO; status PO bergerak otomatis menjadi `Sebagian diterima` atau `Selesai`.
+- **Stok:** kartu stok per barang dan gudang, saldo dihitung dari seluruh mutasi, serta penyesuaian stok bernomor `ADJ`.
+- **Laporan:** ringkasan, PO outstanding, pembelian per supplier, stok per gudang, dan barang perlu dipesan; semuanya dapat diekspor ke CSV.
+- **Audit:** log aktivitas untuk perubahan dokumen dan data master (khusus admin).
+- Antarmuka responsif dengan mode terang/gelap.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
-
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
-
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+## Instalasi
 
 ```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+composer install
+cp .env.example .env
+php artisan key:generate
+# Pastikan berkas database/database.sqlite tersedia
+php artisan migrate
+npm install
+npm run build
+php artisan serve
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+Jika memakai Laravel Herd, buka `http://buku-gudang.test`. Rangkaian `composer setup` juga dapat dipakai untuk melakukan sebagian besar langkah di atas. Saat mengembangkan antarmuka, jalankan `npm run dev` di terminal terpisah.
 
-## Contributing
+## Data awal
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+```bash
+php artisan db:seed
+```
 
-## Code of Conduct
+Perintah ini mengisi lima akun peran **dan** data contoh fiktif selama enam bulan dengan semua status dokumen, penerimaan, mutasi stok, dan log aktivitas. Keduanya idempoten sehingga aman dijalankan ulang. Untuk mengisi akun saja:
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```bash
+php artisan db:seed --class=RoleAccountSeeder
+```
 
-## Security Vulnerabilities
+| Peran | Email | Kewenangan utama |
+| --- | --- | --- |
+| Pemohon | `pemohon@bukugudang.test` | Membuat dan mengajukan PR |
+| Penyetuju | `penyetuju@bukugudang.test` | Menyetujui atau menolak PR (bukan PR milik sendiri) |
+| Pembelian | `pembelian@bukugudang.test` | Membuat dan menerbitkan PO, membatalkan PO, mengelola supplier, mencetak PO |
+| Gudang | `gudang@bukugudang.test` | Mencatat penerimaan barang dan penyesuaian stok |
+| Admin | `admin@bukugudang.test` | Master data, pengguna, laporan, dan log aktivitas |
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Kata sandi semua akun: **`password`**.
 
-## License
+## Alur singkat
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+1. **Pemohon** membuat PR, memilih barang dan jumlah, lalu mengajukannya.
+2. **Penyetuju** menyetujui atau menolak PR disertai alasan.
+3. **Pembelian** membuat PO dari PR yang disetujui, lalu menerbitkannya.
+4. **Gudang** mencatat penerimaan; satu PO dapat diterima beberapa kali hingga selesai.
+5. Mutasi penerimaan masuk ke kartu stok; penyesuaian dapat dicatat bila ada selisih fisik.
+6. **Admin** memantau dashboard, laporan, dan log aktivitas.
+
+## Penomoran dan aturan bisnis
+
+- Nomor dokumen mengikuti pola `PREFIX-YYYYMM-0001` dengan prefiks `PR`, `PO`, `GR`, dan `ADJ` dari `config/erp.php`.
+- Nomor diambil dari tabel `document_sequences` di dalam transaksi dengan `lockForUpdate()` agar tidak ganda. Data contoh memakai blok `0101` supaya tidak bentrok dengan dokumen uji, dan sequences diselaraskan setelah seeding.
+- Uang dan jumlah disimpan sebagai bilangan bulat (rupiah tanpa desimal).
+- Jumlah penerimaan tidak boleh melebihi sisa PO. Pembatalan PO mengembalikan sisa ke PR.
+- Saldo stok selalu dihitung ulang dari buku besar mutasi, bukan dari kolom saldo tersimpan.
+- Perubahan yang menyentuh banyak tabel dijalankan di dalam transaksi; aturan bisnis ada di `app/Services`, validasi di `app/Http/Requests`, dan otorisasi di `app/Policies`.
+
+## Struktur penting
+
+| Lokasi | Isi |
+| --- | --- |
+| `app/Services` | Aturan bisnis PR, PO, GR, stok, penomoran, laporan, dan ekspor CSV |
+| `app/Enums` | Status dokumen, jenis mutasi, dan peran pengguna |
+| `app/Policies`, `app/Http/Requests` | Otorisasi dan validasi |
+| `app/Http/Controllers` | Orkestrasi request dan props Inertia |
+| `resources/js/Pages` | Halaman React per modul |
+| `resources/css/tokens.css` | Token warna, tipografi, dan tema "Buku Besar" |
+| `config/erp.php` | Prefiks dokumen, satuan, dan format mata uang |
+| `database/seeders/SampleDataSeeder.php` | Data contoh fiktif |
+| `docs/PANDUAN-MODIFIKASI.md` | Panduan modifikasi (berkas lokal, masuk `.gitignore`) |
+
+## Perintah pengembangan
+
+```bash
+php artisan test              # menjalankan seluruh tes
+vendor/bin/pint --format agent # memeriksa dan merapikan kode PHP
+npm run build                 # membangun aset frontend untuk produksi
+```
+
+## Catatan
+
+- Semua data adalah fiktif untuk keperluan demo dan portofolio.
+- Tidak ada aset atau font yang dimuat dari CDN.
+- `CHANGELOG.md` mencatat rencana dan hasil pekerjaan; `AGENTS.md` berisi aturan kerja agen pada proyek ini.

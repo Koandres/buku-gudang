@@ -1,6 +1,7 @@
 import { Head } from '@inertiajs/react';
 import Layout from '../Components/Layout';
 import MonthChart from '../Components/MonthChart';
+import { Rupiah } from '../Components/Num';
 
 function Stat({ label, value }) {
     return (
@@ -20,6 +21,9 @@ export default function Dashboard({ stats, chart }) {
                     <Stat label="PR menunggu persetujuan" value={stats.menunggu} />
                     <Stat label="PO masih terbuka" value={stats.poTerbuka} />
                     <Stat label="Barang di bawah stok minimum" value={stats.stokMinimum} />
+                    <Stat label="Total nilai PO" value={<Rupiah value={stats.totalNilaiPo} />} />
+                    <Stat label="Jumlah barang" value={stats.totalBarang} />
+                    <Stat label="Jumlah supplier" value={stats.totalSupplier} />
                 </div>
                 <div className="panel panel-pad">
                     <div className="page-sub" style={{ marginBottom: '12px' }}>Nilai pembelian enam bulan terakhir</div>
