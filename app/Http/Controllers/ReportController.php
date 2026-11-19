@@ -20,7 +20,7 @@ class ReportController extends Controller
 
     public function index(): Response
     {
-        $this->authorizeLaporan();
+        $this->authorizeKeuangan();
 
         return Inertia::render('Reports/Index', [
             'ringkasan' => $this->reports->ringkasan(),
@@ -30,7 +30,7 @@ class ReportController extends Controller
 
     public function outstanding(): Response
     {
-        $this->authorizeLaporan();
+        $this->authorizeKeuangan();
 
         return Inertia::render('Reports/Outstanding', [
             'rows' => $this->reports->outstanding()->all(),
@@ -39,7 +39,7 @@ class ReportController extends Controller
 
     public function suppliers(): Response
     {
-        $this->authorizeLaporan();
+        $this->authorizeKeuangan();
 
         return Inertia::render('Reports/Suppliers', [
             'rows' => $this->reports->perSupplier()->all(),
@@ -57,7 +57,7 @@ class ReportController extends Controller
 
     public function reorder(): Response
     {
-        $this->authorizeLaporan();
+        $this->authorizeKeuangan();
 
         return Inertia::render('Reports/Reorder', [
             'rows' => $this->reports->perluDipesan()->all(),
@@ -66,8 +66,13 @@ class ReportController extends Controller
 
     public function export(Request $request): StreamedResponse
     {
-        $this->authorizeLaporan();
         $jenis = (string) $request->query('jenis', '');
+        if ($jenis === 'stock') {
+            $this->authorizeLaporan();
+        } else {
+            $this->authorizeKeuangan();
+        }
+
         $data = $this->reports->dataEkspor($jenis);
 
         return $this->csv->download($data['headers'], $data['rows'], 'laporan-'.$jenis);
@@ -76,5 +81,10 @@ class ReportController extends Controller
     private function authorizeLaporan(): void
     {
         Gate::authorize('viewAny', PurchaseRequest::class);
+    }
+
+    private function authorizeKeuangan(): void
+    {
+        Gate::authorize('viewFinancialData');
     }
 }

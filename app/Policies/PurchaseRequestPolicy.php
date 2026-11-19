@@ -16,9 +16,8 @@ class PurchaseRequestPolicy
 
     public function view(User $user, PurchaseRequest $request): bool
     {
-        return $user->hasRole(UserRole::Admin)
-            || $request->user_id === $user->id
-            || $user->hasRole(UserRole::Penyetuju, UserRole::Pembelian, UserRole::Gudang);
+        return $user->hasRole(UserRole::Admin, UserRole::Penyetuju, UserRole::Pembelian, UserRole::Gudang)
+            || ($user->hasRole(UserRole::Pemohon) && $request->user_id === $user->id);
     }
 
     public function create(User $user): bool

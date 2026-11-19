@@ -31,6 +31,10 @@ class SampleDataSeeder extends Seeder
 
     public function run(): void
     {
+        if (app()->environment('production')) {
+            return;
+        }
+
         $this->call(RoleAccountSeeder::class);
 
         DB::transaction(function (): void {

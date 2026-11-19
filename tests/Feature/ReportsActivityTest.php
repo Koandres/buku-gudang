@@ -149,6 +149,39 @@ it('menetralisir nilai rumus CSV tetapi mempertahankan angka negatif', function 
         ->and($isi)->not->toContain(',=SUM(1+1)');
 });
 
+it('mengirim baris laporan stok dan supplier sebagai daftar berindeks urut', function () {
+    $data = siapDataLaporan();
+
+    $supplierBaru = Supplier::create([
+        'kode' => 'SUP-LAP-0', 'nama' => 'A Supplier Laporan', 'kontak' => 'Kontak',
+        'telepon' => '0222222222', 'alamat' => 'Alamat', 'aktif' => true,
+    ]);
+    $orderBaru = PurchaseOrder::create([
+        'nomor' => 'PO-LAP-0002', 'tanggal' => now()->toDateString(),
+        'supplier_id' => $supplierBaru->id, 'user_id' => $data['admin']->id,
+        'status' => OrderStatus::Terbit,
+    ]);
+    $itemBaru = Item::create([
+        'kode' => 'BRG-LAP-0', 'nama' => 'A Barang Laporan', 'satuan' => 'pcs',
+        'harga_acuan' => 5000, 'stok_minimum' => 1, 'aktif' => true,
+    ]);
+    $orderBaru->items()->create([
+        'item_id' => $itemBaru->id, 'nama' => $itemBaru->nama,
+        'harga' => 5000, 'jumlah' => 2, 'jumlah_diterima' => 2,
+    ]);
+    StockMovement::create([
+        'item_id' => $itemBaru->id, 'warehouse_id' => $data['warehouse']->id,
+        'jenis' => MovementType::Masuk, 'quantity' => 2,
+        'reference' => 'GR-LAP-0002', 'user_id' => $data['gudang']->id, 'waktu' => now(),
+    ]);
+
+    $laporan = app(ReportService::class);
+
+    expect(array_is_list($laporan->perSupplier()->all()))->toBeTrue()
+        ->and(array_is_list($laporan->stokPerGudang()->all()))->toBeTrue()
+        ->and($laporan->stokPerGudang()->first()['kode'])->toBe($itemBaru->kode);
+});
+
 it('hanya admin yang dapat melihat log aktivitas', function () {
     $data = siapDataLaporan();
 

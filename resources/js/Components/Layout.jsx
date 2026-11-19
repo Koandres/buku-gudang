@@ -1,8 +1,11 @@
 import { Link, usePage } from '@inertiajs/react';
 import { useState } from 'react';
 
+const keuangan = ['pembelian', 'admin'];
+const kartuStok = ['gudang', 'pembelian', 'admin'];
+
 const groups = [
-    { title: 'Ringkasan', links: [['/dashboard', 'Dashboard']] },
+    { title: 'Ringkasan', links: [['/dashboard', 'Dashboard', keuangan]] },
     {
         title: 'Pengadaan',
         links: [
@@ -14,18 +17,18 @@ const groups = [
     {
         title: 'Gudang',
         links: [
-            ['/stock', 'Kartu Stok'],
-            ['/stock/adjust', 'Penyesuaian Stok'],
+            ['/stock', 'Kartu Stok', kartuStok],
+            ['/stock/adjust', 'Penyesuaian Stok', ['gudang', 'admin']],
         ],
     },
     {
         title: 'Laporan',
         links: [
-            ['/reports', 'Ringkasan'],
-            ['/reports/outstanding', 'PO Outstanding'],
-            ['/reports/suppliers', 'Per Supplier'],
+            ['/reports', 'Ringkasan', keuangan],
+            ['/reports/outstanding', 'PO Outstanding', keuangan],
+            ['/reports/suppliers', 'Per Supplier', keuangan],
             ['/reports/stock', 'Stok per Gudang'],
-            ['/reports/reorder', 'Perlu Dipesan'],
+            ['/reports/reorder', 'Perlu Dipesan', keuangan],
         ],
     },
     {
@@ -37,6 +40,7 @@ const groups = [
             ['/users', 'Pengguna'],
         ],
     },
+    { title: 'Akun', links: [['/profile/password', 'Ubah Kata Sandi']] },
     { title: 'Admin', links: [['/activities', 'Log Aktivitas']], roles: ['admin'] },
 ];
 
@@ -63,19 +67,22 @@ export default function Layout({ children, title, subtitle, actions }) {
                 </div>
                 <div className="nav-groups">
                     {groups
-                        .filter((group) => !group.roles || group.roles.includes(user?.role))
+                        .filter((group) => (!group.roles || group.roles.includes(user?.role))
+                            && group.links.some(([, , roles]) => !roles || roles.includes(user?.role)))
                         .map((group) => (
                             <nav className="nav-group" key={group.title} aria-label={group.title}>
                                 <div className="nav-group-title">{group.title}</div>
-                                {group.links.map(([href, label]) => (
-                                    <Link
-                                        key={href}
-                                        href={href}
-                                        className={`nav-link ${url.startsWith(href) ? 'active' : ''}`}
-                                    >
-                                        {label}
-                                    </Link>
-                                ))}
+                                {group.links
+                                    .filter(([, , roles]) => !roles || roles.includes(user?.role))
+                                    .map(([href, label]) => (
+                                        <Link
+                                            key={href}
+                                            href={href}
+                                            className={`nav-link ${url.startsWith(href) ? 'active' : ''}`}
+                                        >
+                                            {label}
+                                        </Link>
+                                    ))}
                             </nav>
                         ))}
                 </div>

@@ -29,10 +29,15 @@ it('menolak seluruh akses akun nonaktif', function (string $rute) {
     'activities.index',
 ]);
 
-it('tetap mengizinkan akun aktif mengakses dashboard dan laporan', function (string $rute) {
+it('tetap mengizinkan akun aktif mengakses daftar dokumen dan laporan stok', function (string $rute) {
     $user = User::factory()->create(['role' => UserRole::Pemohon]);
 
     $this->actingAs($user)
         ->get(route($rute))
         ->assertOk();
-})->with(['dashboard', 'reports.index']);
+})->with([
+    'purchase-requests.index',
+    'purchase-orders.index',
+    'goods-receipts.index',
+    'reports.stock',
+]);

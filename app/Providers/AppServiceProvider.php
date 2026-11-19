@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Enums\UserRole;
 use App\Models\StockMovement;
 use App\Models\User;
 use App\Policies\StockPolicy;
@@ -24,6 +25,8 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Gate::before(fn (User $user): ?bool => $user->active ? null : false);
+
+        Gate::define('viewFinancialData', fn (User $user): bool => $user->hasRole(UserRole::Pembelian, UserRole::Admin));
 
         Gate::policy(StockMovement::class, StockPolicy::class);
     }

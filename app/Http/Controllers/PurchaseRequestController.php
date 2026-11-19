@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\RequestStatus;
+use App\Enums\UserRole;
 use App\Http\Requests\PurchaseRequestRequest;
 use App\Http\Requests\RejectRequest;
 use App\Models\ActivityLog;
@@ -28,6 +29,7 @@ class PurchaseRequestController extends Controller
 
         $requests = PurchaseRequest::query()
             ->with(['user:id,name', 'items.item:id,kode,nama,satuan'])
+            ->when($request->user()->hasRole(UserRole::Pemohon), fn ($query) => $query->where('user_id', $request->user()->id))
             ->when($q, fn ($query) => $query->where(
                 fn ($query) => $query->where('nomor', 'like', "%$q%")->orWhere('keperluan', 'like', "%$q%")
             ))

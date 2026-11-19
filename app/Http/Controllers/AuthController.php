@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\UserRole;
 use App\Http\Requests\LoginRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
@@ -31,7 +32,16 @@ class AuthController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('dashboard'));
+        return redirect()->intended($this->halamanAwal());
+    }
+
+    private function halamanAwal(): string
+    {
+        return match (Auth::user()->role) {
+            UserRole::Pemohon, UserRole::Penyetuju => route('purchase-requests.index'),
+            UserRole::Pembelian, UserRole::Admin => route('dashboard'),
+            UserRole::Gudang => route('stock.index'),
+        };
     }
 
     public function logout(): RedirectResponse

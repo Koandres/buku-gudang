@@ -10,6 +10,10 @@ class RoleAccountSeeder extends Seeder
 {
     public function run(): void
     {
+        if (app()->environment('production')) {
+            return;
+        }
+
         foreach (UserRole::cases() as $role) {
             User::updateOrCreate(
                 ['email' => $role->value.'@bukugudang.test'],

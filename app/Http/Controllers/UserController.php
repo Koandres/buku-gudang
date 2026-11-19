@@ -49,7 +49,6 @@ class UserController extends Controller
     {
         Gate::authorize('create', User::class);
         $data = $request->validated();
-        $data['password'] ??= 'password';
         $user = User::create($data);
         $this->logActivity('Tambah pengguna', "Pengguna: {$user->email}", $user->role->label());
 

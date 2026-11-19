@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\PurchaseRequest;
 use App\Services\ReportService;
 use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
@@ -14,7 +13,7 @@ class DashboardController extends Controller
 
     public function index(): Response
     {
-        Gate::authorize('viewAny', PurchaseRequest::class);
+        Gate::authorize('viewFinancialData');
 
         return Inertia::render('Dashboard', [
             'stats' => $this->reports->statistik(),

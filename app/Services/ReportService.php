@@ -125,8 +125,8 @@ class ReportService
                     )),
                 ];
             })
-            ->values()
-            ->sortBy('nama');
+            ->sortBy('nama')
+            ->values();
     }
 
     /** @return Collection<int, array<string, mixed>> */
@@ -158,8 +158,8 @@ class ReportService
                     'saldo' => $jumlah,
                 ];
             })
-            ->values()
-            ->sortBy(fn (array $baris): string => (string) $baris['gudang'].'|'.(string) $baris['kode']);
+            ->sortBy(fn (array $baris): string => (string) $baris['gudang'].'|'.(string) $baris['kode'])
+            ->values();
     }
 
     /** @return Collection<int, array<string, mixed>> */
