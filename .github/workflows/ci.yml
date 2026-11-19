@@ -1,0 +1,51 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout kode
+        uses: actions/checkout@v4
+
+      - name: Siapkan PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: mbstring, dom, curl, zip, sqlite3, pdo_sqlite, intl, bcmath
+          coverage: none
+
+      - name: Siapkan Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Salin berkas lingkungan
+        run: cp .env.example .env
+
+      - name: Pasang dependensi Composer
+        run: composer install --prefer-dist --no-interaction --no-progress
+
+      - name: Buat kunci aplikasi
+        run: php artisan key:generate
+
+      - name: Pasang dependensi npm
+        run: npm ci --ignore-scripts
+
+      - name: Cek gaya kode
+        run: vendor/bin/pint --test --format agent
+
+      - name: Jalankan tes
+        run: composer test
+
+      - name: Bangun aset
+        run: npm run build

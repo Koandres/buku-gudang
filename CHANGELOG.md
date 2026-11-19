@@ -11,6 +11,7 @@ Format satu baris:
 
 ## Selesai
 
+- 2026-11-19 · Berkas: .github/workflows/ci.yml, CHANGELOG.md · Ubah: Menambah workflow GitHub Actions untuk menjalankan Pint, tes, dan build pada push/PR (diverifikasi dengan membaca berkas, keberadaan composer.lock/package-lock.json, dan cabang main; belum dijalankan di GitHub Actions)
 - 2026-11-19 · Berkas: tests/Feature/PurchaseOrderFlowTest.php, tests/Feature/PurchaseRequestFlowTest.php · Ubah: Menambah tes regresi pembatalan PO setelah penerimaan sebagian dan larangan mengubah PR non-draft (diuji `php artisan test` 41/41)
 - 2026-11-19 · Berkas: resources/js/Components/Pagination.jsx, resources/js/Pages/Dashboard.jsx, resources/js/Pages/Reports/Index.jsx, resources/js/Pages/PurchaseOrders/Show.jsx, resources/css/app.css · Ubah: Mengganti inline style berulang dengan kelas/token yang sudah ada dan membuat pagination merender teks tanpa dangerouslySetInnerHTML (diuji `npm run build`)
 - 2026-11-19 · Berkas: resources/js/app.js, resources/views/welcome.blade.php · Ubah: Menghapus entri starter kit yang tidak dipakai (diverifikasi tidak ada referensi sumber tersisa; hanya cache Blade otomatis)
