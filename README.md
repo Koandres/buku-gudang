@@ -18,7 +18,7 @@ Aplikasi ini dibuat sebagai **studi kasus portofolio**. Seluruh nama, alamat, ha
 - **Pesanan pembelian (PO):** dibuat dari PR secara sebagian maupun penuh, terbitkan, batalkan dengan pengembalian sisa PR, serta cetak PO.
 - **Penerimaan barang (GR):** terima sebagian atau seluruh isi PO; status PO bergerak otomatis menjadi `Sebagian diterima` atau `Selesai`.
 - **Stok:** kartu stok per barang dan gudang, saldo dihitung dari seluruh mutasi, serta penyesuaian stok bernomor `ADJ`.
-- **Laporan:** ringkasan, PO outstanding, pembelian per supplier, stok per gudang, dan barang perlu dipesan; semuanya dapat diekspor ke CSV.
+- **Laporan:** ringkasan, PO outstanding, pembelian per supplier, stok per gudang, dan barang perlu dipesan; semuanya dapat diekspor ke CSV. Dashboard dan laporan dapat dibuka oleh semua peran aktif.
 - **Audit:** log aktivitas untuk perubahan dokumen dan data master (khusus admin).
 - Antarmuka responsif dengan mode terang/gelap.
 
@@ -35,7 +35,7 @@ npm run build
 php artisan serve
 ```
 
-Jika memakai Laravel Herd, buka `http://buku-gudang.test`. Rangkaian `composer setup` juga dapat dipakai untuk melakukan sebagian besar langkah di atas. Saat mengembangkan antarmuka, jalankan `npm run dev` di terminal terpisah.
+Jika memakai Laravel Herd, buka `http://buku-gudang.test`. Rangkaian `composer setup` juga dapat dipakai untuk melakukan sebagian besar langkah di atas. Saat mengembangkan antarmuka, jalankan `npm run dev` di terminal terpisah. Laravel Boost terdaftar sebagai dev dependency (`laravel/boost`), jadi ikut terpasang saat `composer install` dan dipakai untuk panduan pengembangan.
 
 ## Data awal
 
@@ -55,9 +55,9 @@ php artisan db:seed --class=RoleAccountSeeder
 | Penyetuju | `penyetuju@bukugudang.test` | Menyetujui atau menolak PR (bukan PR milik sendiri) |
 | Pembelian | `pembelian@bukugudang.test` | Membuat dan menerbitkan PO, membatalkan PO, mengelola supplier, mencetak PO |
 | Gudang | `gudang@bukugudang.test` | Mencatat penerimaan barang dan penyesuaian stok |
-| Admin | `admin@bukugudang.test` | Master data, pengguna, laporan, dan log aktivitas |
+| Admin | `admin@bukugudang.test` | Master data, pengguna, dan log aktivitas |
 
-Kata sandi semua akun: **`password`**.
+Kata sandi semua akun: **`password`**. Pengguna baru yang dibuat melalui menu pengguna juga memakai kata sandi default **`password`**.
 
 ## Alur singkat
 
@@ -66,7 +66,7 @@ Kata sandi semua akun: **`password`**.
 3. **Pembelian** membuat PO dari PR yang disetujui, lalu menerbitkannya.
 4. **Gudang** mencatat penerimaan; satu PO dapat diterima beberapa kali hingga selesai.
 5. Mutasi penerimaan masuk ke kartu stok; penyesuaian dapat dicatat bila ada selisih fisik.
-6. **Admin** memantau dashboard, laporan, dan log aktivitas.
+6. Dashboard dan laporan dapat dipantau oleh semua peran aktif; **Admin** juga memantau log aktivitas.
 
 ## Penomoran dan aturan bisnis
 

@@ -93,3 +93,52 @@ it('menolak PR disertai alasan', function () {
     expect($pr->fresh()->status)->toBe(RequestStatus::Ditolak)
         ->and($pr->fresh()->alasan_ditolak)->toBe('Anggaran tidak tersedia');
 });
+
+it('menolak barang nonaktif dan baris duplikat pada PR', function () {
+    $pemohon = User::factory()->create(['role' => UserRole::Pemohon]);
+    $itemAktif = itemUntukTesPR();
+    $itemNonaktif = Item::create([
+        'kode' => 'BRG-MATI-'.fake()->unique()->numerify('###'),
+        'nama' => 'Barang Nonaktif',
+        'satuan' => 'pcs',
+        'harga_acuan' => 10000,
+        'stok_minimum' => 1,
+        'aktif' => false,
+    ]);
+
+    $this->actingAs($pemohon)
+        ->post(route('purchase-requests.store'), [
+            'tanggal' => now()->toDateString(),
+            'keperluan' => 'Keperluan tes',
+            'items' => [['item_id' => $itemNonaktif->id, 'jumlah' => 2]],
+        ])
+        ->assertSessionHasErrors('items.0.item_id');
+
+    $this->post(route('purchase-requests.store'), [
+        'tanggal' => now()->toDateString(),
+        'keperluan' => 'Keperluan tes',
+        'items' => [
+            ['item_id' => $itemAktif->id, 'jumlah' => 2],
+            ['item_id' => $itemAktif->id, 'jumlah' => 3],
+        ],
+    ])->assertSessionHasErrors('items.1.item_id');
+
+    expect(PurchaseRequest::count())->toBe(0);
+});
+
+it('menolak perubahan PR yang sudah diajukan', function () {
+    $pemohon = User::factory()->create(['role' => UserRole::Pemohon]);
+    $item = itemUntukTesPR();
+    $pr = buatPRTes($pemohon, $item, ['status' => RequestStatus::Diajukan]);
+
+    $this->actingAs($pemohon)
+        ->put(route('purchase-requests.update', $pr), [
+            'tanggal' => now()->toDateString(),
+            'keperluan' => 'Keperluan diubah',
+            'items' => [['item_id' => $item->id, 'jumlah' => 7]],
+        ])
+        ->assertForbidden();
+
+    expect($pr->fresh()->keperluan)->toBe('Keperluan tes')
+        ->and($pr->items()->first()->jumlah)->toBe(5);
+});

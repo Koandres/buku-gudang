@@ -38,18 +38,18 @@ export default function OrderShow({ order, total, timeline, can }) {
                         </dl>
                         <dl className="doc-meta"><dt>Dibuat oleh</dt><dd>{order.user?.name ?? '—'}</dd></dl>
                     </div>
-                    {order.catatan && <p style={{ marginTop: '12px' }}>{order.catatan}</p>}
+                    {order.catatan && <p className="text-gap">{order.catatan}</p>}
                 </div>
 
                 <div className="panel">
                     <DataTable columns={columns} rows={order.items} empty="Belum ada barang." />
-                    <div className="panel-pad row" style={{ justifyContent: 'flex-end' }}>
+                    <div className="panel-pad row row-end">
                         <strong>Total: <Rupiah value={total} /></strong>
                     </div>
                 </div>
 
-                <div className="panel panel-pad">
-                    <div className="page-sub" style={{ marginBottom: '8px' }}>Penerimaan dari PO ini</div>
+                <div className="panel panel-pad no-print">
+                    <div className="page-sub sub-title-sm">Penerimaan dari PO ini</div>
                     {order.receipts?.length ? (
                         <ul>
                             {order.receipts.map((receipt) => (
@@ -75,8 +75,8 @@ export default function OrderShow({ order, total, timeline, can }) {
                     </div>
                 </div>
 
-                <div className="panel panel-pad">
-                    <div className="page-sub" style={{ marginBottom: '8px' }}>Riwayat status</div>
+                <div className="panel panel-pad no-print">
+                    <div className="page-sub sub-title-sm">Riwayat status</div>
                     <ul className="timeline">
                         {timeline.map((entry, index) => (
                             <li key={index}>

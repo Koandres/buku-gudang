@@ -8,6 +8,7 @@ use App\Models\PurchaseOrder;
 use App\Models\PurchaseRequest;
 use App\Models\Supplier;
 use App\Models\User;
+use App\Models\Warehouse;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
@@ -106,6 +107,41 @@ it('mengembalikan sisa PR saat PO dibatalkan', function () {
     expect($order->fresh()->status)->toBe(OrderStatus::Dibatalkan)
         ->and($pr->items()->first()->jumlah_dipesan)->toBe(0)
         ->and($pr->fresh()->status)->toBe(RequestStatus::Disetujui);
+});
+
+it('menolak pembatalan PO yang sudah diterima sebagian', function () {
+    $pemohon = User::factory()->create(['role' => UserRole::Pemohon]);
+    $pembelian = User::factory()->create(['role' => UserRole::Pembelian]);
+    $gudang = User::factory()->create(['role' => UserRole::Gudang]);
+    $pr = prDisetujuiUntukPO($pemohon, itemUntukTesPO(), 10);
+
+    $this->actingAs($pembelian);
+    $this->post(route('purchase-orders.store'), dataPesananUntukPO($pr, supplierUntukTesPO(), 10))->assertRedirect();
+    $order = PurchaseOrder::sole();
+    $this->post(route('purchase-orders.issue', $order))->assertRedirect();
+
+    $warehouse = Warehouse::create(['kode' => 'GUD-PO-1', 'nama' => 'Gudang Tes PO']);
+    $this->actingAs($gudang)
+        ->post(route('goods-receipts.store'), [
+            'tanggal' => now()->toDateString(),
+            'purchase_order_id' => $order->id,
+            'warehouse_id' => $warehouse->id,
+            'catatan' => 'Penerimaan sebagian',
+            'items' => [[
+                'purchase_order_item_id' => $order->items->first()->id,
+                'jumlah' => 4,
+            ]],
+        ])
+        ->assertRedirect();
+
+    expect($order->fresh()->status)->toBe(OrderStatus::SebagianDiterima);
+
+    $this->actingAs($pembelian)
+        ->post(route('purchase-orders.cancel', $order))
+        ->assertSessionHasErrors('status');
+
+    expect($order->fresh()->status)->toBe(OrderStatus::SebagianDiterima)
+        ->and($pr->fresh()->status)->toBe(RequestStatus::Diproses);
 });
 
 it('menolak jumlah pesanan melebihi sisa PR', function () {

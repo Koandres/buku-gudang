@@ -8,8 +8,18 @@ Format satu baris:
 
 ## Rencana
 
+
 ## Selesai
 
+- 2026-11-19 · Berkas: tests/Feature/PurchaseOrderFlowTest.php, tests/Feature/PurchaseRequestFlowTest.php · Ubah: Menambah tes regresi pembatalan PO setelah penerimaan sebagian dan larangan mengubah PR non-draft (diuji `php artisan test` 41/41)
+- 2026-11-19 · Berkas: resources/js/Components/Pagination.jsx, resources/js/Pages/Dashboard.jsx, resources/js/Pages/Reports/Index.jsx, resources/js/Pages/PurchaseOrders/Show.jsx, resources/css/app.css · Ubah: Mengganti inline style berulang dengan kelas/token yang sudah ada dan membuat pagination merender teks tanpa dangerouslySetInnerHTML (diuji `npm run build`)
+- 2026-11-19 · Berkas: resources/js/app.js, resources/views/welcome.blade.php · Ubah: Menghapus entri starter kit yang tidak dipakai (diverifikasi tidak ada referensi sumber tersisa; hanya cache Blade otomatis)
+- 2026-11-19 · Berkas: README.md · Ubah: Menyelaraskan dokumentasi: dashboard/laporan untuk semua peran aktif, Boost sebagai dev dependency, dan kata sandi default pengguna baru (diverifikasi dengan membaca berkas)
+- 2026-11-19 · Berkas: resources/js/Pages/PurchaseOrders/Show.jsx · Ubah: Membatasi hasil cetak PO hanya dokumen PO dengan memberi `no-print` pada panel penerimaan dan riwayat (diverifikasi `npm run build`; print.css sudah memiliki aturan `.no-print` sehingga tidak diubah)
+- 2026-11-19 · Berkas: app/Services/CsvExportService.php, tests/Feature/ReportsActivityTest.php · Ubah: Menetralisir nilai CSV yang diawali rumus spreadsheet dan menambah tes ekspor (diuji `php artisan test` 39/39)
+- 2026-11-19 · Berkas: app/Http/Requests/PurchaseRequestRequest.php, app/Http/Requests/StockAdjustmentRequest.php, tests/Feature/PurchaseRequestFlowTest.php, tests/Feature/GoodsReceiptStockTest.php · Ubah: Membatasi barang aktif dan melarang baris duplikat pada PR/penyesuaian stok disertai tes validasi (diuji `php artisan test` 38/38)
+- 2026-11-19 · Berkas: app/Providers/AppServiceProvider, bootstrap/app.php, app/Http/Middleware/EnsureRole.php, tests/Feature/ActiveUserAccessTest.php · Ubah: Menolak seluruh akses akun nonaktif lewat Gate::before, menghapus middleware peran yang tidak dipakai, dan menambah tes otorisasi (diuji `php artisan test` 36/36)
+- 2026-11-19 · Berkas: .agents/skills · Ubah: Memasang skill ponytail, modern-web-guidance, grilling, dan teach dari repositori GitHub yang ditentukan (diverifikasi keempat skill berhasil dimuat lewat tool skill)
 - 2026-11-18 · Berkas: docs/PANDUAN-MODIFIKASI.md, .gitignore · Ubah: Menambah panduan modifikasi lokal dan mengabaikannya dari Git (diverifikasi `git check-ignore -v`: `.gitignore:28`)
 - 2026-11-18 · Berkas: README.md · Ubah: Mengganti README bawaan dengan panduan aplikasi Buku Gudang (fitur, instalasi, akun peran, alur kerja, penomoran, dan perintah pengembangan) (diverifikasi dengan membaca berkas)
 - 2026-11-18 · Berkas: app/Http/Controllers/StockController, tests/Feature/GoodsReceiptStockTest · Ubah: Memisahkan saldo berjalan kartu stok per barang dan gudang agar tidak menggabungkan mutasi lintas barang (diuji `php artisan test` 23/23 dan preview: BRG-C03 60→56, BRG-C01 cabang 12→7)

@@ -21,12 +21,25 @@ class CsvExportService
 
             foreach ($rows as $row) {
                 fputcsv($handle, array_map(
-                    fn (mixed $value): string => is_scalar($value) ? (string) $value : '',
+                    fn (mixed $value): string => $this->nilaiAman($value),
                     array_values($row),
                 ));
             }
 
             fclose($handle);
         }, $nama.'.csv', ['Content-Type' => 'text/csv; charset=UTF-8']);
+    }
+
+    private function nilaiAman(mixed $value): string
+    {
+        if (! is_string($value)) {
+            return is_scalar($value) ? (string) $value : '';
+        }
+
+        if (is_numeric($value)) {
+            return $value;
+        }
+
+        return preg_match('/^[=+\-@]/', $value) === 1 ? "'".$value : $value;
     }
 }

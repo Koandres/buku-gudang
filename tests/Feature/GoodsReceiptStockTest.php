@@ -184,3 +184,21 @@ it('menampilkan saldo berjalan kartu stok per barang dan gudang', function () {
             ->where('rows.1.saldo', 10)
             ->where('saldoAkhir', 13));
 });
+
+it('menolak penyesuaian stok untuk barang nonaktif', function () {
+    $gudang = User::factory()->create(['role' => UserRole::Gudang]);
+    $item = itemUntukTesGR();
+    $item->update(['aktif' => false]);
+    $warehouse = Warehouse::create(['kode' => 'GUD-GR-6', 'nama' => 'Gudang Tes 6']);
+
+    $this->actingAs($gudang)
+        ->post(route('stock.adjust.store'), [
+            'item_id' => $item->id,
+            'warehouse_id' => $warehouse->id,
+            'quantity' => 1,
+            'catatan' => 'Hitung fisik',
+        ])
+        ->assertSessionHasErrors('item_id');
+
+    expect(StockMovement::count())->toBe(0);
+});

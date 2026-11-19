@@ -10,6 +10,7 @@ use App\Models\StockMovement;
 use App\Models\Supplier;
 use App\Models\User;
 use App\Models\Warehouse;
+use App\Services\CsvExportService;
 use App\Services\ReportService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Inertia\Testing\AssertableInertia;
@@ -123,6 +124,29 @@ it('mengekspor setiap laporan sebagai CSV', function () {
         expect($isi)->toContain($kop)
             ->and($isi)->toContain("\xEF\xBB\xBF");
     }
+});
+
+it('menetralisir nilai rumus CSV tetapi mempertahankan angka negatif', function () {
+    $response = app(CsvExportService::class)->download(
+        ['Nama', 'Nilai'],
+        [
+            ['=SUM(1+1)', -5],
+            ['+cmd', '@ref'],
+            ['-teks', 'biasa'],
+        ],
+        'csv-aman',
+    );
+
+    ob_start();
+    $response->sendContent();
+    $isi = (string) ob_get_clean();
+
+    expect($isi)->toContain("'=SUM(1+1)")
+        ->and($isi)->toContain("'+cmd")
+        ->and($isi)->toContain("'@ref")
+        ->and($isi)->toContain("'-teks")
+        ->and($isi)->toContain('-5')
+        ->and($isi)->not->toContain(',=SUM(1+1)');
 });
 
 it('hanya admin yang dapat melihat log aktivitas', function () {

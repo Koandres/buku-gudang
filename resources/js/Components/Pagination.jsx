@@ -13,10 +13,11 @@ export default function Pagination({ meta }) {
                         key={index}
                         href={link.url}
                         className={link.active ? 'current' : ''}
-                        dangerouslySetInnerHTML={{ __html: link.label }}
-                    />
+                    >
+                        {link.label}
+                    </Link>
                 ) : (
-                    <span key={index} dangerouslySetInnerHTML={{ __html: link.label }} />
+                    <span key={index}>{link.label}</span>
                 ),
             )}
         </nav>

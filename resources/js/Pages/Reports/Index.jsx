@@ -22,18 +22,18 @@ export default function ReportsIndex({ ringkasan, chart }) {
         >
             <Head title="Ringkasan Laporan" />
             <div className="stack">
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '12px' }}>
+                <div className="stat-grid">
                     {kartu.map(([label, nilai]) => (
                         <div className="panel panel-pad" key={label}>
                             <div className="small muted">{label}</div>
-                            <div style={{ fontFamily: 'var(--font-number)', fontSize: '24px' }}>
+                            <div className="stat-value">
                                 {label === kunciNilai ? <Rupiah value={nilai} /> : nilai}
                             </div>
                         </div>
                     ))}
                 </div>
                 <div className="panel panel-pad">
-                    <div className="page-sub" style={{ marginBottom: '12px' }}>Nilai pembelian enam bulan terakhir</div>
+                    <div className="page-sub sub-title">Nilai pembelian enam bulan terakhir</div>
                     <MonthChart data={chart} />
                 </div>
                 <div className="panel">
