@@ -10,6 +10,7 @@ Format satu baris:
 
 ## Selesai
 
+- 2026-11-19 · Berkas: .github/workflows/ci.yml, CHANGELOG.md · Ubah: Memindahkan build aset Vite sebelum menjalankan tes agar `public/build/manifest.json` tersedia untuk `@vite` (diverifikasi dengan membaca urutan langkah; workflow belum dijalankan ulang di GitHub Actions)
 - 2026-11-19 · Berkas: app/Http/Requests/ChangePasswordRequest.php, tests/Feature/ChangePasswordTest.php · Ubah: Menerjemahkan pesan validasi pada halaman ubah kata sandi ke bahasa Indonesia dan menambah tes (diuji `php artisan test --filter=ChangePasswordTest` 8/8, `vendor/bin/pint --test --format agent`, dan `php artisan test` 79/79; diverifikasi di preview: sandi saat ini salah menampilkan "Kata sandi saat ini tidak benar.")
 - 2026-11-19 · Berkas: resources/js/Components/Layout.jsx · Ubah: Menyembunyikan menu dan grup kosong yang tidak diizinkan bagi peran sesuai pembatasan A3 (diverifikasi `npm run build` dan preview: Pemohon/Penyetuju tidak melihat Dashboard, Kartu Stok, atau laporan bernilai uang; Pembelian tidak melihat Penyesuaian Stok)
 - 2026-11-19 · Berkas: app/Http/Controllers/AuthController.php, tests/Feature/LoginRedirectTest.php · Ubah: Mengarahkan pengguna ke halaman awal sesuai peran setelah login (Pemohon/Penyetuju ke daftar PR, Pembelian/Admin ke dashboard, Gudang ke kartu stok) dan menambah tes (diuji `php artisan test` 75/75)

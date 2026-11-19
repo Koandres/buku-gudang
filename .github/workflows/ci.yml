@@ -41,11 +41,11 @@ jobs:
       - name: Pasang dependensi npm
         run: npm ci --ignore-scripts
 
+      - name: Bangun aset
+        run: npm run build
+
       - name: Cek gaya kode
         run: vendor/bin/pint --test --format agent
 
       - name: Jalankan tes
         run: composer test
-
-      - name: Bangun aset
-        run: npm run build
