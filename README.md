@@ -151,6 +151,7 @@ flowchart LR
 | `database/seeders/SampleDataSeeder.php` | Data contoh fiktif |
 | `.github/workflows/ci.yml` | Pemeriksaan Pint, tes, dan build di GitHub Actions |
 | `docs/PANDUAN-MODIFIKASI.md` | Panduan modifikasi (berkas lokal, masuk `.gitignore`) |
+| `docs/screenshots/` | Tangkapan layar untuk README |
 
 ## Perintah pengembangan
 
@@ -179,13 +180,19 @@ npm run build                          # membangun aset frontend untuk produksi
 
 ## Tangkapan layar
 
-| Tampilan | Gambar |
+| Dashboard | Permintaan pembelian |
 | --- | --- |
-| Dashboard | _belum tersedia_ |
-| Daftar PR | _belum tersedia_ |
-| Detail PO & cetak | _belum tersedia_ |
-| Kartu stok | _belum tersedia_ |
-| Laporan | _belum tersedia_ |
+| ![Dashboard Buku Gudang dengan ringkasan dan laporan](docs/screenshots/dashboard.png) | ![Daftar permintaan pembelian beserta statusnya](docs/screenshots/permintaan-pembelian.png) |
+
+| Detail pesanan pembelian | Kartu stok |
+| --- | --- |
+| ![Detail pesanan pembelian dengan tombol cetak](docs/screenshots/detail-po.png) | ![Kartu stok per barang dan gudang](docs/screenshots/kartu-stok.png) |
+
+| Laporan | Mode gelap |
+| --- | --- |
+| ![Laporan pembelian per supplier](docs/screenshots/laporan.png) | ![Tampilan mode gelap bertema Buku Besar](docs/screenshots/mode-gelap.png) |
+
+Tangkapan layar dibuat dari data contoh fiktif enam bulan yang dihasilkan seeder.
 
 ## Lisensi
 

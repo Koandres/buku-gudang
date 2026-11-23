@@ -10,6 +10,8 @@ Format satu baris:
 
 ## Selesai
 
+- 2026-11-23 · Berkas: docs/screenshots/*.png, CHANGELOG.md · Ubah: Menangkap enam screenshot README otomatis lewat headless Chrome dan CDP (dashboard, PR, detail PO, kartu stok, laporan, mode gelap; semuanya 1440x900; profil Chrome dan script sementara sudah dihapus)
+- 2026-11-23 · Berkas: README.md, CHANGELOG.md · Ubah: Menyesuaikan bagian tangkapan layar dengan pola tabel dua kolom, alt deskriptif, dan keterangan data demo seperti README kasir-kertas (diverifikasi dengan membaca README; berkas PNG belum disertakan)
 - 2026-11-19 · Berkas: config/inertia.php, CHANGELOG.md · Ubah: Menambah override path halaman Inertia ke `resources/js/Pages` agar pemeriksaan komponen lolos di runner Linux yang case-sensitive (diverifikasi `vendor/bin/pint --test --format agent` dan `php artisan test` 79/79; perlu dipush untuk memastikan CI GitHub Actions lolos)
 - 2026-11-19 · Berkas: .github/workflows/ci.yml, CHANGELOG.md · Ubah: Memindahkan build aset Vite sebelum menjalankan tes agar `public/build/manifest.json` tersedia untuk `@vite` (diverifikasi dengan membaca urutan langkah; workflow belum dijalankan ulang di GitHub Actions)
 - 2026-11-19 · Berkas: app/Http/Requests/ChangePasswordRequest.php, tests/Feature/ChangePasswordTest.php · Ubah: Menerjemahkan pesan validasi pada halaman ubah kata sandi ke bahasa Indonesia dan menambah tes (diuji `php artisan test --filter=ChangePasswordTest` 8/8, `vendor/bin/pint --test --format agent`, dan `php artisan test` 79/79; diverifikasi di preview: sandi saat ini salah menampilkan "Kata sandi saat ini tidak benar.")
